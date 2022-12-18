@@ -36,10 +36,14 @@ resource "aws_vpn_connection" "cloud_vpnc" {
 resource "aws_vpn_connection_route" "cloud_vpnr" {
   destination_cidr_block = "10.20.0.0/16"
   vpn_connection_id      = aws_vpn_connection.cloud_vpnc.id
-
 }
 
 resource "aws_vpn_gateway_route_propagation" "cloud_vpnrtp" {
   vpn_gateway_id = aws_vpn_gateway.cloud_vg.id
   route_table_id = aws_route_table.public.id
+}
+
+resource "aws_vpn_gateway_route_propagation" "cloud_vpn_private_rtp" {
+  vpn_gateway_id = aws_vpn_gateway.cloud_vg.id
+  route_table_id = aws_route_table.private.id
 }

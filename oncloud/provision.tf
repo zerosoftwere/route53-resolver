@@ -4,7 +4,7 @@ resource "aws_key_pair" "sshkey" {
 }
 
 resource "aws_instance" "cloud" {
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = aws_subnet.private_a.id
   instance_type = "t4g.nano"
   ami           = "ami-01b5ec3ed8678d8b7"
   key_name      = aws_key_pair.sshkey.key_name

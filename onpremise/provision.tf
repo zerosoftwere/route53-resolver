@@ -34,14 +34,6 @@ resource "aws_eip_association" "vpn" {
   allocation_id = aws_eip.vpn.id
 }
 
-resource "aws_route53_record" "vpn" {
-  zone_id = aws_route53_zone.premise.id
-  name    = "vpn.${aws_route53_zone.premise.name}"
-  ttl     = 300
-  type    = "A"
-  records = [aws_instance.vpn.private_ip]
-}
-
 # App instance
 
 resource "aws_instance" "app" {
@@ -57,14 +49,6 @@ resource "aws_instance" "app" {
   tags = {
     "Name" = "Premise Instance"
   }
-}
-
-resource "aws_route53_record" "ap" {
-  zone_id = aws_route53_zone.premise.id
-  name    = "app.${aws_route53_zone.premise.name}"
-  ttl     = 300
-  type    = "A"
-  records = [aws_instance.app.private_ip]
 }
 
 # DNS instance
@@ -83,14 +67,6 @@ resource "aws_instance" "dns" {
   tags = {
     "Name" = "Premise DNS"
   }
-}
-
-resource "aws_route53_record" "dns" {
-  zone_id = aws_route53_zone.premise.id
-  name    = "dns.${aws_route53_zone.premise.name}"
-  ttl     = 300
-  type    = "A"
-  records = [aws_instance.dns.private_ip]
 }
 
 

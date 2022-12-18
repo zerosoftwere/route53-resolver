@@ -75,6 +75,30 @@ resource "aws_route_table_association" "cloud_public_rta" {
   subnet_id      = aws_subnet.public.id
 }
 
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.cloud.id
+
+  tags = {
+    "Name" = "Cloud private"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      propagating_vgws
+    ]
+  }
+}
+
+resource "aws_route_table_association" "cloud_private_a_rta" {
+  route_table_id = aws_route_table.private.id
+  subnet_id      = aws_subnet.private_a.id
+}
+
+resource "aws_route_table_association" "cloud_private_b_rta" {
+  route_table_id = aws_route_table.private.id
+  subnet_id      = aws_subnet.private_b.id
+}
+
 # Allow ssh and ping security groups
 
 resource "aws_security_group" "cloud" {
@@ -108,6 +132,30 @@ resource "aws_security_group" "cloud" {
     "Name" = "Cloud"
   }
 
+}
+
+resource "aws_security_group" "dns_resolver" {
+  vpc_id = aws_vpc.cloud.id
+
+  ingress {
+    cidr_blocks = ["10.0.0.0/8"]
+    from_port   = 53
+    to_port     = 53
+    description = "Allow DNS Query"
+    protocol    = "udp"
+  }
+
+  egress {
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    description = "Allow all outgoing"
+  }
+
+  tags = {
+    "Name" = "DNS Resolver"
+  }
 }
 
 # DHCP options and association

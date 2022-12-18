@@ -90,7 +90,6 @@ resource "aws_route_table" "private" {
   route {
     cidr_block           = "10.10.0.0/16"
     network_interface_id = aws_instance.vpn.primary_network_interface_id
-    instance_id          = aws_instance.vpn.id
   }
 
   route {
